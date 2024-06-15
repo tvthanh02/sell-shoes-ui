@@ -38,10 +38,9 @@ const Footer = () => {
         <div className="container grid py-[40px] grid-cols-1 md:grid-cols-4 gap-8 md:gap-5">
           <div className="row-start-4 md:row-start-1 w-full flex-grow-0 flex-shrink-0">
             <p className="flex items-center gap-1 text-xl md:text-2xl lg:basis-3/12 lg:text-3xl font-bold">
-              <span className="py-[2px] px-1 bg-primary text-black rounded-full">
-                TVT
+              <span className="py-[2px] px-2 bg-primary text-black rounded-full">
+                Shoes
               </span>
-              Shop
             </p>
             <span className="text-[1.1rem] lg:text-[1.3rem] text-white">
               You&apos;re king in your way
@@ -116,7 +115,7 @@ const Footer = () => {
           <div className="w-full flex flex-col justify-start gap-4 flex-grow-0 flex-shrink-0">
             <p className="uppercase font-bold text-base">Thông tin liên hệ</p>
             <div className="flex flex-col gap-3 text-sm">
-              <p>TVTSHOP.VN Trang Thông Tin Chính Thức</p>
+              <p>SHOES.VN Trang Thông Tin Chính Thức</p>
             </div>
           </div>
         </div>

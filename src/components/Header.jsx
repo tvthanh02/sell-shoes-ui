@@ -13,7 +13,7 @@ const Header = () => {
   const [quantity, setQuantity] = useState(1);
 
   return (
-    <header className="fixed top-0 left-0 right-0 shadow-sm bg-white">
+    <header className="shadow-vertival bg-white">
       <div
         className={
           "container flex items-center text-textColor justify-end gap-2 py-2"
@@ -24,11 +24,10 @@ const Header = () => {
         <p className="font-bold">0356457894</p>
       </div>
       <hr className="w-full h-[1px] border-t border-solid border-[#f1f1f1]" />
-      <div className="container bg-white flex items-center text-[1.5rem] py-2 gap-3">
+      <div className="container bg-white flex items-center text-sm py-3 gap-3">
         <div className="basis-5/12 lg:basis-2/12">
-          <p className="text-xl md:text-2xl lg:basis-3/12 lg:text-3xl font-bold">
-            <span className="py-[2px] px-1 bg-primary rounded-full">TVT</span>
-            Shop
+          <p className="flex items-center gap-1 text-xl md:text-2xl lg:basis-3/12 lg:text-3xl font-bold">
+            <span className="py-[2px] px-2 bg-primary rounded-full">Shoes</span>
           </p>
           <span className="text-[1.1rem] lg:text-[1.3rem] text-textColor">
             You&apos;re king in your way
