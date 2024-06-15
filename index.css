@@ -16,3 +16,23 @@ html {
 body {
   font-size: 1.6rem;
 }
+
+.slick-slider {
+  width: 100% !important;
+  height: 100% !important;
+}
+.slick-list {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.slick-track {
+  height: 100% !important;
+}
+
+.slick-slide {
+  height: 100% !important;
+}
+.slick-slide > div {
+  height: 100% !important;
+}

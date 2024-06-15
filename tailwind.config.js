@@ -13,6 +13,9 @@ export default {
       padding: "1.5rem",
     },
     extend: {
+      gridTemplateColumns: {
+        "3/1": "3fr 1fr",
+      },
       spacing: () => ({
         ...Array.from({ length: 96 }, (_, index) => index * 0.5)
           .filter((i) => i)
@@ -111,6 +114,9 @@ export default {
         black: "#191919",
         red: "#cf5050",
         gray: "#cccc",
+      },
+      boxShadow: {
+        vertival: "0px 2px 4px rgba(0, 0, 0, 0.13)",
       },
     },
   },
