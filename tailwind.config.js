@@ -15,6 +15,7 @@ export default {
     extend: {
       gridTemplateColumns: {
         "3/1": "3fr 1fr",
+        "1/4": "1fr 4fr",
       },
       spacing: () => ({
         ...Array.from({ length: 96 }, (_, index) => index * 0.5)

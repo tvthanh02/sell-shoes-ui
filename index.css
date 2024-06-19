@@ -7,6 +7,9 @@
   * {
     @apply box-border;
   }
+  .container-cus {
+    @apply w-full px-[1.5rem] lg:max-w-[1024px] mx-auto;
+  }
 }
 
 html {
