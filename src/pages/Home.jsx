@@ -3,6 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTruckFast, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
+import { useEffect, useState } from "react";
+import {
+  getBestSellproducts,
+  getNewProducts,
+  getSaleProducts,
+} from "@/service";
 
 const Home = () => {
   const data = [
@@ -10,68 +16,9 @@ const Home = () => {
     "https://bizweb.dktcdn.net/100/020/315/themes/756968/assets/banner_2.png?1645521760170",
   ];
 
-  const newProducts = [
-    {
-      name: "NIKE AIR MAX EXCEE",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/fz3593-133-giay-nike-air-max-excee-gia-tot-den-king-shoes-12.jpeg",
-      price: "2.900.000 đ",
-    },
-    {
-      name: "NIKE AIR MAX EXCEE",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/fz3593-133-giay-nike-air-max-excee-gia-tot-den-king-shoes-12.jpeg",
-      price: "2.900.000 đ",
-    },
-    {
-      name: "NIKE AIR MAX 90 SE",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/fb2269-106-giay-jordan-stadium-90-gia-tot-den-king-shoes-store-12.jpeg",
-      price: "2.900.000 đ",
-    },
-    {
-      name: "JORDAN STADIUM 90",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/fz3593-133-giay-nike-air-max-excee-gia-tot-den-king-shoes-12.jpeg",
-      price: "2.900.000 đ",
-    },
-    {
-      name: "NIKE AIR MAX EXCEE",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/dv1753-601-giay-nike-air-jordan-1-retro-high-og-university-red-black-gia-tot-den-king-shoes-13.jpeg",
-      price: "2.900.000 đ",
-    },
-    {
-      name: "JORDAN 1 RETRO HIGH OG UNIVERSITY RED BLACK",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/ct3839-107-giay-nike-air-force-1-white-pink-gia-tot-den-king-shoes-18.jpeg",
-      price: "5,800,000 đ",
-    },
-    {
-      name: "NIKE AIR FORCE 1 WHITE PINK",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/fq8127-030-giay-nike-terminator-low-phantom-and-black-gia-tot-den-king-shoes-12.jpeg",
-      price: "3,600,000 đ",
-    },
-    {
-      name: "NIKE TERMINATOR LOW PHANTOM",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/fq8127-030-giay-nike-terminator-low-phantom-and-black-gia-tot-den-king-shoes-12.jpeg",
-      price: "3,900,000 đ",
-    },
-    {
-      name: "NIKE AIR WINFLO 10",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/dd6203-003-giay-nike-air-wio-10-road-running-gia-tot-den-king-shoes-12.jpeg",
-      price: "2.900.000 đ",
-    },
-    {
-      name: "ADIDAS NMD_G1",
-      thumb:
-        "https://kingshoes.vn/data/upload/media/ie4559-giay-adidas-nmd-g1-chinh-hang-gia-tot-den-king-shoes-1.jpg",
-      price: "2.900.000 đ",
-    },
-  ];
+  const [newProducts, setNewProducts] = useState([]);
+  const [bestSellProducts, setBestSellProducts] = useState([]);
+  const [saleProducts, setSaleProducts] = useState([]);
 
   const settings = {
     dots: false,
@@ -84,6 +31,24 @@ const Home = () => {
     nextArrow: <></>,
     prevArrow: <></>,
   };
+
+  useEffect(() => {
+    const querys = {
+      page: 0,
+      limit: 20,
+    };
+    (async () => {
+      const [newProducts, bestSellProducts, saleProducts] = await Promise.all([
+        getNewProducts(querys),
+        getBestSellproducts(querys),
+        getSaleProducts(querys),
+      ]);
+
+      setNewProducts(newProducts);
+      setBestSellProducts(bestSellProducts);
+      setSaleProducts(saleProducts);
+    })();
+  }, []);
 
   return (
     <div className="w-full">
@@ -201,19 +166,20 @@ const Home = () => {
               ],
             }}
           >
-            {newProducts.map((product, index) => {
-              return (
-                <div key={index} className="w-[260px] md:px-3">
-                  <ProductCard product={product} />
-                </div>
-              );
-            })}
+            {newProducts?.data?.length > 0 &&
+              newProducts.data.map((product) => {
+                return (
+                  <div key={product.productCode} className="w-[260px] md:px-3">
+                    <ProductCard product={product} />
+                  </div>
+                );
+              })}
           </Slider>
         </div>
       </section>
       <section className="container flex flex-col gap-5 mt-15">
         <div className="w-full flex items-center justify-between">
-          <div className="uppercase text-2xl font-bold">sản phẩm nổi bật</div>
+          <div className="uppercase text-2xl font-bold">sản phẩm bán chạy</div>
           <NavLink
             className={
               "flex items-center gap-2 text-sm bg-primary uppercase text-white font-bold py-3 px-4 rounded-full"
@@ -263,13 +229,14 @@ const Home = () => {
               ],
             }}
           >
-            {newProducts.map((product, index) => {
-              return (
-                <div key={index} className="w-[260px] md:px-3">
-                  <ProductCard product={product} />
-                </div>
-              );
-            })}
+            {bestSellProducts?.data?.length > 0 &&
+              bestSellProducts.data.map((product) => {
+                return (
+                  <div key={product.productCode} className="w-[260px] md:px-3">
+                    <ProductCard product={product} />
+                  </div>
+                );
+              })}
           </Slider>
         </div>
       </section>
@@ -327,13 +294,14 @@ const Home = () => {
               ],
             }}
           >
-            {newProducts.map((product, index) => {
-              return (
-                <div key={index} className="w-[260px] md:px-3">
-                  <ProductCard product={product} />
-                </div>
-              );
-            })}
+            {saleProducts?.data?.length > 0 &&
+              saleProducts.data.map((product) => {
+                return (
+                  <div key={product.productCode} className="w-[260px] md:px-3">
+                    <ProductCard product={product} />
+                  </div>
+                );
+              })}
           </Slider>
         </div>
       </section>
