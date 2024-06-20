@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useMemo } from "react";
+import { convertNumberToVnd } from "@/utils/convert";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const ProductCard = ({ product }) => {
       </p>
       <div className="flex gap-1">
         {rate &&
-          Array(Number(rate))
+          Array(rate)
             .fill(1)
             .map((item, index) => {
               return (
@@ -55,7 +56,9 @@ const ProductCard = ({ product }) => {
               );
             })}
       </div>
-      <p className="text-textColor text-base font-bold">{newPrice}</p>
+      <p className="text-textColor text-base font-bold">
+        {convertNumberToVnd(newPrice)}
+      </p>
       <div className="absolute top-0 left-0 flex flex-col gap-2">
         {previous2Day.getTime() <= createdAt &&
           createdAt <= currentDate.getTime() && (

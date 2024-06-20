@@ -25,7 +25,7 @@ const Pagination = ({ itemsPerPage, totalPages, limitData, onChangePage }) => {
 
   return (
     <ReactPaginate
-      className="py-2 px-4 flex items-center justify-center gap-8"
+      className="py-2 px-4 flex items-center justify-center gap-5 md:gap-8"
       activeClassName="bg-red text-white border-none"
       breakLabel="..."
       nextLabel={

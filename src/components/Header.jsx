@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
@@ -9,8 +9,10 @@ import { NavLink } from "react-router-dom";
 
 import Input from "@/components/Input";
 
+import { AppContext } from "@/App";
+
 const Header = () => {
-  const [quantity, setQuantity] = useState(1);
+  const { state } = useContext(AppContext);
 
   return (
     <header className="shadow-vertival bg-white">
@@ -40,7 +42,7 @@ const Header = () => {
             }
             to={"/"}
           >
-            giới thiệu
+            Trang chủ
           </NavLink>
           <NavLink
             className={
@@ -77,7 +79,7 @@ const Header = () => {
           >
             <FontAwesomeIcon icon={faCartShopping} />
             <div className="absolute top-0 right-0 translate-x-[30%] translate-y-[-30%] w-[20px] h-[20px] flex items-center justify-center rounded-full bg-primary text-black">
-              {quantity}
+              {state?.quantity}
             </div>
           </NavLink>
         </div>
