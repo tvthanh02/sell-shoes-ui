@@ -10,3 +10,7 @@ export const getCartFromStorage = () => {
 
   return JSON.parse(value);
 };
+
+export const clearCart = () => {
+  localStorage.removeItem("cart");
+};

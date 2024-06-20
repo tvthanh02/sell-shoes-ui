@@ -45,3 +45,19 @@ export const getNewProducts = async (querys = {}) => {
   );
   return response.json();
 };
+
+export const addBill = async (bill) => {
+  let isSuccess = true;
+  try {
+    await fetch(baseUrlApi + "bills", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(bill),
+    });
+  } catch (error) {
+    isSuccess = false;
+  }
+  return isSuccess;
+};
