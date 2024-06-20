@@ -17,7 +17,6 @@ import {
 } from "@/service";
 
 const Product = () => {
-  const locations = ["Hà Nội", "TP.Hồ Chí Minh", "Nha Trang", "Đà Nẵng"];
   const brands = ["Nike", "Adidas", "Jordan"];
   const sizes = [37, 38, 39, 40, 40.5, 41, 42, 43, 44, 45];
 
@@ -84,11 +83,12 @@ const Product = () => {
   };
 
   return (
-    <div className="container grid grid-cols-1/4 gap-5">
+    <div className="container grid grid-cols-1 md:grid-cols-1/4 gap-5">
       <div className="w-full flex flex-col gap-10">
         <p className="text-[1.7rem] font-bold uppercase flex items-center gap-4">
           <FontAwesomeIcon className="text-primary" icon={faFilter} />
-          bộ lọc tìm kiếm
+          <p className="hidden lg:inline-block">bộ lọc tìm kiếm</p>
+          <p className="lg:hidden">bộ lọc</p>
         </p>
         <div className="flex flex-col gap-5">
           <FilterGroup
@@ -107,10 +107,12 @@ const Product = () => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-5">
-        <div className="w-full bg-[#ededed] py-4 px-3 flex items-center justify-between">
+        <div className="w-full bg-[#ededed] py-4 px-3 flex items-end md:items-center justify-between">
           <div className="flex items-center gap-6">
-            <p className="text-[1.5rem] text-textColor">Sắp xếp theo</p>
-            <div className="flex items-center gap-4 text-[1.5rem]">
+            <p className="hidden md:block text-[1.5rem] text-textColor">
+              Sắp xếp theo
+            </p>
+            <div className="flex w-[60%] md:w-auto flex-wrap items-center gap-4 text-[1.5rem]">
               <NavLink
                 to={"/product"}
                 className={({ isActive }) =>
@@ -181,7 +183,7 @@ const Product = () => {
             </div>
           )}
         </div>
-        <div className="w-full grid grid-cols-4 gap-3">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {products.length > 0 &&
             products.map((product) => {
               return (

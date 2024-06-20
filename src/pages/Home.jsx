@@ -123,7 +123,7 @@ const Home = () => {
             }
             to={"/product"}
           >
-            xem thêm
+            <p className="hidden md:block">Xem thêm</p>
             <FontAwesomeIcon icon={faArrowRight} />
           </NavLink>
         </div>
@@ -186,7 +186,7 @@ const Home = () => {
             }
             to={"/product?q=bestsell"}
           >
-            xem thêm
+            <p className="hidden md:block">Xem thêm</p>
             <FontAwesomeIcon icon={faArrowRight} />
           </NavLink>
         </div>
@@ -247,11 +247,11 @@ const Home = () => {
           </div>
           <NavLink
             className={
-              "flex items-center gap-2 text-sm lg:bg-primary uppercase text-black lg:text-white font-bold lg:py-3 lg:px-4 rounded-full"
+              "flex items-center gap-2 text-sm bg-primary uppercase text-white font-bold py-3 px-4 rounded-full"
             }
             to={"/product?q=promotion"}
           >
-            xem thêm
+            <p className="hidden md:block">Xem thêm</p>
             <FontAwesomeIcon icon={faArrowRight} />
           </NavLink>
         </div>

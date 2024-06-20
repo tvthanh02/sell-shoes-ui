@@ -1,21 +1,22 @@
 /* eslint-disable indent */
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartPlus,
   faMinus,
   faPlus,
   faStar,
-  faArrowRight,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { NavLink } from "react-router-dom";
 import { ProductCard, Slider } from "@/components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import { getProduct, getProductByBrand } from "@/service";
 import { getCartFromStorage, setCartToStorage } from "@/utils/storage";
+import Swal from "sweetalert2";
+import { convertNumberToVnd } from "@/utils/convert";
+import { AppContext } from "@/App";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -25,6 +26,8 @@ const ProductDetail = () => {
   const [crumbs, setCrumbs] = useState([]);
   const [countQuantity, setCountQuantity] = useState(1);
   const [maxQuantityProduct, setMaxQuantityProduct] = useState();
+  const [selectedSize, setSelectedSize] = useState();
+  const { dispatcher } = useContext(AppContext);
 
   useEffect(() => {
     (async () => {
@@ -38,9 +41,15 @@ const ProductDetail = () => {
       setActiveThumb(product.thumbs[4]);
       setRelevants(relevantProducts);
       setCrumbs([
-        { label: "Home", path: "/", icon: <FontAwesomeIcon icon={faHome} /> },
-        { label: "Product", path: "/product" },
-        { label: product.nameProduct },
+        {
+          label: "Trang Chủ",
+          path: "/",
+          icon: <FontAwesomeIcon icon={faHome} />,
+        },
+        { label: "Sản Phẩm", path: "/product" },
+        {
+          label: product.nameProduct,
+        },
       ]);
     })();
   }, [id]);
@@ -63,39 +72,67 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    const productData = {
-      productCode: productDetail.productCode,
-      productName: productDetail.nameProduct,
-      quantity: countQuantity,
-    };
+    if ((productDetail, selectedSize)) {
+      const productData = {
+        code: productDetail.productCode,
+        productName: productDetail.nameProduct,
+        productThumb: productDetail.thumbs[4],
+        size: selectedSize,
+        totalQuantity: productDetail.quantity,
+        price: productDetail.newPrice,
+        quantity: countQuantity,
+      };
 
-    let cart = getCartFromStorage();
+      let cart = getCartFromStorage();
 
-    cart =
-      cart.length > 0
-        ? cart.some(
-            (product) => product.productCode === productData.productCode
-          )
-          ? [
-              ...cart.map((product) => {
-                if (product.productCode === productData.productCode) {
-                  product.quantity += productData.quantity;
-                }
-                return product;
-              }),
-            ]
-          : [...cart, productData]
-        : [productData];
+      cart =
+        cart.length > 0
+          ? cart.some(
+              (product) =>
+                product.code === productData.code &&
+                product.size === productData.size
+            )
+            ? [
+                ...cart.map((product) => {
+                  if (
+                    product.code === productData.code &&
+                    product.size === productData.size
+                  ) {
+                    product.quantity += productData.quantity;
+                  }
+                  return product;
+                }),
+              ]
+            : [...cart, productData]
+          : [productData];
 
-    setCartToStorage(cart);
+      setCartToStorage(cart);
+      dispatcher({
+        type: "UPDATE_QUANTITY",
+        payload: getCartFromStorage().length,
+      });
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Thêm thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Bạn chưa chọn kích thước",
+      });
+    }
   };
 
   return (
     <>
-      <div className="container w-full h-[35px]">
+      <div className="hidden md:block container w-full h-[35px]">
         {crumbs.length > 0 && <Breadcrumb crumbs={crumbs} />}
       </div>
-      <div className="container-cus my-10 grid grid-cols-2 gap-[6rem]">
+      <div className="container-cus my-10 grid grid-cols-1 md:grid-cols-2 gap-[6rem]">
         <div className="grid grid-cols-1/4 gap-5">
           <div className="flex flex-col gap-10">
             <div className="px-2 w-full flex flex-col gap-5 ">
@@ -105,7 +142,9 @@ const ProductDetail = () => {
                     return (
                       <div
                         key={index}
-                        className={"w-full h-[60px]"}
+                        className={
+                          "w-full h-[60px] border border-solid border-textColor"
+                        }
                         onClick={() => setActiveThumb(thumb)}
                       >
                         <img
@@ -148,7 +187,8 @@ const ProductDetail = () => {
               {productDetail?.nameProduct && productDetail.nameProduct}
             </p>
             <p className="text-2xl text-red font-bold">
-              {productDetail?.newPrice && productDetail.newPrice}
+              {productDetail?.newPrice &&
+                convertNumberToVnd(productDetail.newPrice)}
             </p>
           </div>
           <hr className="border-t border-solid border-[#f1f1f1]" />
@@ -158,7 +198,20 @@ const ProductDetail = () => {
                 return (
                   <div
                     key={index}
-                    className="p-3 border border-solid border-textColor"
+                    className={`p-3  hover:cursor-pointer ${
+                      selectedSize !== undefined && size === selectedSize
+                        ? "bg-primary border border-solid border-transparent"
+                        : "bg-transparent border border-solid border-textColor"
+                    }`}
+                    onClick={() =>
+                      setSelectedSize((prev) => {
+                        if (prev !== size) {
+                          return size;
+                        } else {
+                          return undefined;
+                        }
+                      })
+                    }
                   >
                     {size}
                   </div>
@@ -186,7 +239,7 @@ const ProductDetail = () => {
 
           <div className="w-full">
             <button
-              className="py-3 px-5 bg-primary text-black rounded-3xl"
+              className="w-full md:w-auto py-3 px-5 bg-primary text-black rounded-3xl"
               onClick={handleAddToCart}
             >
               <FontAwesomeIcon icon={faCartPlus} /> Thêm vào giỏ
