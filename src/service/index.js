@@ -1,6 +1,4 @@
-import "dotenv/config";
-
-const baseUrlApi = process.env.BASE_URL_API;
+const baseUrlApi = import.meta.env.VITE_BASE_URL_API;
 
 export const getProduct = async (id) => {
   const response = await fetch(baseUrlApi + "product/" + id);
@@ -37,6 +35,7 @@ export const getSaleProducts = async (querys = {}) => {
 };
 
 export const getNewProducts = async (querys = {}) => {
+  console.log(baseUrlApi);
   const response = await fetch(
     baseUrlApi +
       "products" +
