@@ -6,7 +6,7 @@ import {
   faAngleRight,
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, startTransition } from "react";
 import ProductCard from "@/components/ProductCard";
 import { NavLink, useLocation } from "react-router-dom";
 import { Pagination, FilterGroup } from "@/components";
@@ -15,6 +15,7 @@ import {
   getNewProducts,
   getSaleProducts,
 } from "@/service";
+import SkeletonLoadCard from "@/components/SkeletonLoadCard";
 
 const Product = () => {
   const brands = ["Nike", "Adidas", "Jordan"];
@@ -23,6 +24,7 @@ const Product = () => {
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const filterQuery = useMemo(() => {
     const keys = Object.keys(filter);
@@ -58,8 +60,18 @@ const Product = () => {
 
   useEffect(() => {
     (async () => {
-      let data = await handleGetData({ ...filterQuery });
-      setData(data);
+      setIsLoading(true);
+      startTransition(async () => {
+        try {
+          let data = await handleGetData({ ...filterQuery });
+          setIsLoading(false);
+          setData(data);
+        } catch (error) {
+          alert(
+            "Đã có lỗi xảy ra phía server, không thể truy cập vào lúc này..."
+          );
+        }
+      });
     })();
   }, [location.search, filterQuery]);
 
@@ -85,11 +97,11 @@ const Product = () => {
   return (
     <div className="container grid grid-cols-1 md:grid-cols-1/4 gap-5">
       <div className="w-full flex flex-col gap-10">
-        <p className="text-[1.7rem] font-bold uppercase flex items-center gap-4">
+        <div className="text-[1.7rem] font-bold uppercase flex items-center gap-4">
           <FontAwesomeIcon className="text-primary" icon={faFilter} />
           <p className="hidden lg:inline-block">bộ lọc tìm kiếm</p>
           <p className="lg:hidden">bộ lọc</p>
-        </p>
+        </div>
         <div className="flex flex-col gap-5">
           <FilterGroup
             data={brands}
@@ -145,7 +157,7 @@ const Product = () => {
               </NavLink>
             </div>
           </div>
-          {data?.paging && (
+          {!isLoading && data?.paging && (
             <div className="flex items-center gap-3 text-textColor">
               <p>
                 {data.paging?.page}/{data.paging?.totalPage}
@@ -184,15 +196,19 @@ const Product = () => {
           )}
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {products.length > 0 &&
-            products.map((product) => {
-              return (
-                <ProductCard key={product.productCode} product={product} />
-              );
-            })}
+          {!isLoading
+            ? products.length > 0 &&
+              products.map((product) => {
+                return (
+                  <ProductCard key={product.productCode} product={product} />
+                );
+              })
+            : Array(12)
+                .fill(1)
+                .map((item, index) => <SkeletonLoadCard key={index} />)}
         </div>
         <div className="w-full mt-8 ">
-          {data?.paging && (
+          {!isLoading && data?.paging && (
             <Pagination
               itemsPerPage={12}
               totalPages={data.data?.length}

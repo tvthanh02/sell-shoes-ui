@@ -37,32 +37,40 @@ const Header = () => {
         </div>
         <nav className="hidden lg:flex lg:flex-row lg:basis-7/12 items-center justify-center gap-10 font-bold uppercase">
           <NavLink
-            className={
-              "p-[1rem] hover:bg-primary hover:text-white rounded-[20px] transition-all ease-in-out duration-300"
+            className={({ isActive }) =>
+              isActive
+                ? "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-100 text-black  rounded-[20px]"
+                : "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-0 before:transition-all before:ease-in-out before:duration-300 hover:before:scale-x-100 hover:text-black  rounded-[20px] transition-all ease-in-out duration-300"
             }
             to={"/"}
           >
             Trang chủ
           </NavLink>
           <NavLink
-            className={
-              "p-[1rem] hover:bg-primary hover:text-white rounded-[20px] transition-all ease-in-out duration-300"
+            className={({ isActive }) =>
+              isActive
+                ? "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-100 text-black  rounded-[20px]"
+                : "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-0 before:transition-all before:ease-in-out before:duration-300 hover:before:scale-x-100 hover:text-black  rounded-[20px] transition-all ease-in-out duration-300"
             }
             to={"/product"}
           >
             sản phẩm
           </NavLink>
           <NavLink
-            className={
-              "p-[1rem] hover:bg-primary hover:text-white rounded-[20px] transition-all ease-in-out duration-300"
+            className={({ isActive }) =>
+              isActive
+                ? "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-100 text-black  rounded-[20px]"
+                : "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-0 before:transition-all before:ease-in-out before:duration-300 hover:before:scale-x-100 hover:text-black  rounded-[20px] transition-all ease-in-out duration-300"
             }
             to={"/services"}
           >
             dịch vụ
           </NavLink>
           <NavLink
-            className={
-              "p-[1rem] hover:bg-primary hover:text-white rounded-[20px] transition-all ease-in-out duration-300"
+            className={({ isActive }) =>
+              isActive
+                ? "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-100 text-black  rounded-[20px]"
+                : "relative p-[1rem] before:absolute before:content-[''] before:bottom-0 before:left-0 before:w-full before:h-[3px] before:bg-primary before:origin-top-left before:scale-x-0 before:transition-all before:ease-in-out before:duration-300 hover:before:scale-x-100 hover:text-black  rounded-[20px] transition-all ease-in-out duration-300"
             }
             to={"/contact"}
           >

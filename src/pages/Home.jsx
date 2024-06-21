@@ -9,6 +9,67 @@ import {
   getNewProducts,
   getSaleProducts,
 } from "@/service";
+import {
+  faCircleQuestion,
+  faHandshake,
+} from "@fortawesome/free-regular-svg-icons";
+import SkeletonLoadCard from "@/components/SkeletonLoadCard";
+
+const SliderHome = ({ inputData, isLoading }) => {
+  return (
+    <Slider
+      settings={{
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 4,
+        swipeToSlide: true,
+        slidesToScroll: 1,
+        nextArrow: <></>,
+        prevArrow: <></>,
+        responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              infinite: false,
+              dots: false,
+            },
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              initialSlide: 2,
+            },
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+            },
+          },
+        ],
+      }}
+    >
+      {!isLoading
+        ? inputData?.data?.length > 0 &&
+          inputData.data.map((product) => {
+            return (
+              <div key={product.productCode} className="w-[260px] md:px-3">
+                <ProductCard product={product} />
+              </div>
+            );
+          })
+        : Array(4)
+            .fill(1)
+            .map((item, index) => <SkeletonLoadCard key={index} />)}
+    </Slider>
+  );
+};
 
 const Home = () => {
   const data = [
@@ -19,6 +80,7 @@ const Home = () => {
   const [newProducts, setNewProducts] = useState([]);
   const [bestSellProducts, setBestSellProducts] = useState([]);
   const [saleProducts, setSaleProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const settings = {
     dots: false,
@@ -44,9 +106,12 @@ const Home = () => {
         getSaleProducts(querys),
       ]);
 
-      setNewProducts(newProducts);
-      setBestSellProducts(bestSellProducts);
-      setSaleProducts(saleProducts);
+      if (newProducts && bestSellProducts && saleProducts) {
+        setIsLoading(false);
+        setNewProducts(newProducts);
+        setBestSellProducts(bestSellProducts);
+        setSaleProducts(saleProducts);
+      }
     })();
   }, []);
 
@@ -73,7 +138,7 @@ const Home = () => {
         <div className="container grid grid-cols-1 md:grid-cols-3 gap-7">
           <article className="w-full flex flex-col gap-3 items-center">
             <div className="text-[5rem]">
-              <FontAwesomeIcon icon={faTruckFast} />
+              <FontAwesomeIcon icon={faHandshake} />
             </div>
             <p className="text-primary uppercase text-2xl font-bold text-center">
               cam kết chính hãng
@@ -100,7 +165,7 @@ const Home = () => {
           </article>
           <article className="w-full flex flex-col gap-3 items-center">
             <div className="text-[5rem]">
-              <FontAwesomeIcon icon={faTruckFast} />
+              <FontAwesomeIcon icon={faCircleQuestion} />
             </div>
             <p className="text-primary uppercase text-2xl font-bold text-center">
               HỖ TRỢ 24/24
@@ -128,53 +193,7 @@ const Home = () => {
           </NavLink>
         </div>
         <div className="w-full">
-          <Slider
-            settings={{
-              dots: false,
-              infinite: false,
-              speed: 500,
-              slidesToShow: 4,
-              swipeToSlide: true,
-              slidesToScroll: 1,
-              nextArrow: <></>,
-              prevArrow: <></>,
-              responsive: [
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    infinite: false,
-                    dots: false,
-                  },
-                },
-                {
-                  breakpoint: 600,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2,
-                  },
-                },
-                {
-                  breakpoint: 480,
-                  settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                  },
-                },
-              ],
-            }}
-          >
-            {newProducts?.data?.length > 0 &&
-              newProducts.data.map((product) => {
-                return (
-                  <div key={product.productCode} className="w-[260px] md:px-3">
-                    <ProductCard product={product} />
-                  </div>
-                );
-              })}
-          </Slider>
+          <SliderHome inputData={newProducts} isLoading={isLoading} />
         </div>
       </section>
       <section className="container flex flex-col gap-5 mt-15">
@@ -191,53 +210,7 @@ const Home = () => {
           </NavLink>
         </div>
         <div className="w-full">
-          <Slider
-            settings={{
-              dots: false,
-              infinite: false,
-              speed: 500,
-              slidesToShow: 4,
-              swipeToSlide: true,
-              slidesToScroll: 1,
-              nextArrow: <></>,
-              prevArrow: <></>,
-              responsive: [
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    infinite: false,
-                    dots: false,
-                  },
-                },
-                {
-                  breakpoint: 600,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2,
-                  },
-                },
-                {
-                  breakpoint: 480,
-                  settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                  },
-                },
-              ],
-            }}
-          >
-            {bestSellProducts?.data?.length > 0 &&
-              bestSellProducts.data.map((product) => {
-                return (
-                  <div key={product.productCode} className="w-[260px] md:px-3">
-                    <ProductCard product={product} />
-                  </div>
-                );
-              })}
-          </Slider>
+          <SliderHome inputData={bestSellProducts} isLoading={isLoading} />
         </div>
       </section>
       <section className="container flex flex-col gap-5 mt-15">
@@ -256,53 +229,7 @@ const Home = () => {
           </NavLink>
         </div>
         <div className="w-full">
-          <Slider
-            settings={{
-              dots: false,
-              infinite: false,
-              speed: 500,
-              slidesToShow: 4,
-              swipeToSlide: true,
-              slidesToScroll: 1,
-              nextArrow: <></>,
-              prevArrow: <></>,
-              responsive: [
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    infinite: false,
-                    dots: false,
-                  },
-                },
-                {
-                  breakpoint: 600,
-                  settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2,
-                  },
-                },
-                {
-                  breakpoint: 480,
-                  settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                  },
-                },
-              ],
-            }}
-          >
-            {saleProducts?.data?.length > 0 &&
-              saleProducts.data.map((product) => {
-                return (
-                  <div key={product.productCode} className="w-[260px] md:px-3">
-                    <ProductCard product={product} />
-                  </div>
-                );
-              })}
-          </Slider>
+          <SliderHome inputData={saleProducts} isLoading={isLoading} />
         </div>
       </section>
     </div>

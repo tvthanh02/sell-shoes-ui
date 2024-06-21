@@ -129,10 +129,10 @@ const Cart = () => {
                 key={[product.code, product.size].join()}
                 className="grid grid-cols-1 md:grid-cols-2/1x5 lg:grid-cols-4/1x5 gap-5 md:gap-3 py-3 border-b border-solid border-b-[#f1f1f1] last:border-b-0 last:border-transparent"
               >
-                <div className="flex gap-3 items-center">
-                  <div className="w-[200px] h-[120px] flex-shrink-0">
+                <div className="flex gap-5 items-center">
+                  <div className="w-[120px] md:w-[140px] flex-shrink-0">
                     <img
-                      className="w-full h-full object-cover"
+                      className="w-full aspect-square object-cover"
                       src={product.productThumb}
                       alt="PRODUCT"
                     />
@@ -172,7 +172,7 @@ const Cart = () => {
                 </p>
                 <div className="hidden text-base font-bold md:flex items-center justify-center">
                   <div
-                    className="w-[40px] h-[40px] flex items-center justify-center border border-solid border-red text-red rounded-full"
+                    className="w-[40px] h-[40px] flex items-center justify-center border border-solid border-black text-blaborder-black rounded-full"
                     onClick={() =>
                       handleRemoveProductFromCart(product.code, product.size)
                     }
@@ -198,7 +198,7 @@ const Cart = () => {
             </p>
 
             <button
-              className="py-2 px-7 bg-primary rounded-xl font-semibold shadow-md text-black"
+              className="w-full md:w-auto py-2 px-7 bg-primary rounded-xl font-semibold shadow-md text-black"
               onClick={() => navigate("/payment")}
             >
               Mua

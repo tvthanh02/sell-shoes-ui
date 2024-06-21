@@ -1,4 +1,4 @@
-const baseUrlApi = "https://sell-shoes-json-server.onrender.com/";
+const baseUrlApi = "http://localhost:8080/";
 
 export const getProduct = async (id) => {
   const response = await fetch(baseUrlApi + "product/" + id);

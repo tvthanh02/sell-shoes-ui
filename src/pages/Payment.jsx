@@ -1,5 +1,5 @@
 import Breadcrumb from "@/components/Breadcrumb";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { clearCart, getCartFromStorage } from "@/utils/storage";
@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { addBill } from "@/service";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { AppContext } from "@/App";
 
 function Payment() {
   const [address, setAddress] = useState({
@@ -21,6 +22,7 @@ function Payment() {
 
   const [crumbs, setCrumbs] = useState([]);
   const [cart, setCart] = useState([]);
+  const { dispatcher } = useContext(AppContext);
 
   useEffect(() => {
     const cart = getCartFromStorage();
@@ -85,6 +87,7 @@ function Payment() {
           }).then((result) => {
             if (result.isConfirmed) {
               clearCart();
+              dispatcher({ type: "UPDATE_QUANTITY", payload: 0 });
               navigate("/product");
             }
           });
@@ -264,7 +267,7 @@ function Payment() {
                     >
                       <option value="">--Xã/Thị trấn--</option>
 
-                      <option value="Khương Đình">Khương Đình</option>
+                      <option value="Khương Đình">Tương Mai</option>
                     </select>
                     {!address.village && (
                       <span className="text-red text-[1.3rem]">
@@ -342,7 +345,7 @@ function Payment() {
           </div>
         </form>
         <div className="row-start-1 lg:row-span-2 flex flex-col gap-10">
-          <div className="text-2xl font-bold">Thông Tin Hóa Đơn</div>
+          <div className="text-2xl font-bold">Thông Tin Thanh Toán</div>
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-2/1x2">
               <p className="font-bold">Tên Sản Phẩm</p>
