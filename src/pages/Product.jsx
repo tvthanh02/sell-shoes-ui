@@ -170,11 +170,17 @@ const Product = () => {
                     return;
                   }
                   let prevPage = data.paging.page - 1;
-                  const newData = await handleGetData({
-                    page: prevPage - 1,
-                    ...filterQuery,
+                  setIsLoading(true);
+                  startTransition(async () => {
+                    const newData = await handleGetData({
+                      page: prevPage - 1,
+                      ...filterQuery,
+                    });
+                    if (newData) {
+                      setIsLoading(false);
+                      setData(newData);
+                    }
                   });
-                  newData && setData(newData);
                 }}
               />
               <FontAwesomeIcon
@@ -185,11 +191,17 @@ const Product = () => {
                     return;
                   }
                   let nextPage = data.paging.page + 1;
-                  const newData = await handleGetData({
-                    page: nextPage - 1,
-                    ...filterQuery,
+                  setIsLoading(true);
+                  startTransition(async () => {
+                    const newData = await handleGetData({
+                      page: nextPage - 1,
+                      ...filterQuery,
+                    });
+                    if (newData) {
+                      setIsLoading(false);
+                      setData(newData);
+                    }
                   });
-                  newData && setData(newData);
                 }}
               />
             </div>
