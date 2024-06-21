@@ -1,4 +1,6 @@
-const baseUrlApi = "http://localhost:8080/";
+import "dotenv/config";
+
+const baseUrlApi = process.env.BASE_URL_API;
 
 export const getProduct = async (id) => {
   const response = await fetch(baseUrlApi + "product/" + id);
