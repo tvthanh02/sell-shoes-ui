@@ -1,5 +1,5 @@
-import Breadcrumb from "@/components/Breadcrumb";
 import { useEffect, useState, useMemo, useContext } from "react";
+import Breadcrumb from "@/components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { clearCart, getCartFromStorage } from "@/utils/storage";
@@ -10,22 +10,35 @@ import { addBill } from "@/service";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { AppContext } from "@/App";
-
+import {
+  getDistrictsByProvinceId,
+  getProvinces,
+  getWardsByDistrictId,
+} from "@/service/location";
 function Payment() {
-  const [address, setAddress] = useState({
-    province: "",
-    district: "",
-    village: "",
-  });
-
   const navigate = useNavigate();
-
-  const [crumbs, setCrumbs] = useState([]);
-  const [cart, setCart] = useState([]);
   const { dispatcher } = useContext(AppContext);
 
-  useEffect(() => {
+  // state
+  const [crumbs, setCrumbs] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedWard, setSelectedWard] = useState(null);
+
+  const handleInitData = async () => {
+    //get product in cart
     const cart = getCartFromStorage();
+
+    const provinces = await getProvinces();
+
+    if (provinces?.length > 0) {
+      setProvinces(provinces);
+    }
 
     setCart(cart);
     setCrumbs([
@@ -37,16 +50,54 @@ function Payment() {
       { label: "Giỏ Hàng", path: "/cart" },
       { label: "Thanh Toán" },
     ]);
+  };
+
+  const handleFetchDataDistricts = async () => {
+    const districtData =
+      selectedProvince && (await getDistrictsByProvinceId(selectedProvince));
+
+    if (!districtData) {
+      return;
+    }
+
+    setWards([]);
+    setDistricts(districtData);
+  };
+
+  const handleFetchDataWards = async () => {
+    const wardsData =
+      selectedDistrict && (await getWardsByDistrictId(selectedDistrict));
+
+    if (!wardsData) {
+      return;
+    }
+
+    setWards(wardsData);
+  };
+
+  useEffect(() => {
+    handleInitData();
   }, []);
+
+  useEffect(() => {
+    handleFetchDataDistricts();
+  }, [selectedProvince]);
+
+  useEffect(() => {
+    handleFetchDataWards();
+  }, [selectedDistrict]);
 
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
       email: "",
-      phoneNumber: "",
+      phone: "",
       road: "",
       note: "",
+      province: "",
+      district: "",
+      ward: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -58,7 +109,7 @@ function Payment() {
       email: Yup.string()
         .email("Phải là email vd:yourname@gmail.com")
         .required("Bạn cần phải nhập email"),
-      phoneNumber: Yup.string()
+      phone: Yup.string()
         .required("Bạn cần phải nhập số điện thoại")
         .matches(
           /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
@@ -68,15 +119,17 @@ function Payment() {
         .max(10, "Quá dài so với số điện thoại"),
       road: Yup.string().required("Bạn cần phải nhập địa chỉ cụ thể"),
       note: Yup.string(),
+      province: Yup.string().required("Phải chọn Tỉnh/Thành phố"),
+      district: Yup.string().required("Phải chọn Quận/Huyện"),
+      ward: Yup.string().required("Phải chọn Phường/Xã"),
     }),
     onSubmit: async (values) => {
       if (values) {
-        if (!address.district || !address.province || !address.village) {
+        if (!selectedProvince || !selectedDistrict || !selectedWard) {
           return;
         }
         const isAddSuccess = await addBill({
           ...values,
-          ...address,
           cart: cart,
         });
         if (isAddSuccess) {
@@ -191,17 +244,16 @@ function Payment() {
                     <input
                       className="w-full h-[4rem] border outline-none pl-3"
                       type="text"
-                      name="phoneNumber"
-                      value={formik.values.phoneNumber}
+                      name="phone"
+                      value={formik.values.phone}
                       onChange={formik.handleChange}
                       placeholder="Số Điện Thoại"
                     />
-                    {formik.errors.phoneNumber &&
-                      formik.touched.phoneNumber && (
-                        <span className="text-red text-[1.3rem]">
-                          {formik.errors.phoneNumber}
-                        </span>
-                      )}
+                    {formik.errors.phone && formik.touched.phone && (
+                      <span className="text-red text-[1.3rem]">
+                        {formik.errors.phone}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -217,19 +269,28 @@ function Payment() {
                     <select
                       className="w-full h-[4rem] border outline-none pl-3"
                       name="province"
-                      onChange={(e) =>
-                        setAddress((prev) => ({
-                          ...prev,
-                          province: e.target.value,
-                        }))
-                      }
+                      value={formik.values.province}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        setSelectedProvince(e.target.value);
+                      }}
                     >
                       <option value="">--Tỉnh/Thành phố--</option>
-                      <option value="Hà Nội">Hà Nội</option>
+                      {provinces?.length > 0 &&
+                        provinces.map((province) => {
+                          return (
+                            <option
+                              key={province.provinceId}
+                              value={province.provinceId}
+                            >
+                              {province.provinceName}
+                            </option>
+                          );
+                        })}
                     </select>
-                    {!address.province && (
+                    {formik.errors.province && formik.touched.province && (
                       <span className="text-red text-[1.3rem]">
-                        Bạn cần phải chọn Tỉnh/Thành phố
+                        {formik.errors.province}
                       </span>
                     )}
                   </div>
@@ -237,41 +298,55 @@ function Payment() {
                     <select
                       className="w-full h-[4rem] border outline-none pl-3"
                       name="district"
-                      onChange={(e) =>
-                        setAddress((prev) => ({
-                          ...prev,
-                          district: e.target.value,
-                        }))
-                      }
+                      value={formik.values.district}
+                      onChange={(e) => {
+                        setSelectedDistrict(e.target.value);
+                        formik.handleChange(e);
+                      }}
                     >
                       <option value="">--Quận/Huyện--</option>
 
-                      <option value="Hoàng Mai">Hoàng Mai</option>
+                      {districts?.length > 0 &&
+                        districts.map((district) => {
+                          return (
+                            <option
+                              key={district.districtId}
+                              value={district.districtId}
+                            >
+                              {district.districtName}
+                            </option>
+                          );
+                        })}
                     </select>
-                    {!address.district && (
+                    {formik.errors.district && formik.touched.district && (
                       <span className="text-red text-[1.3rem]">
-                        Bạn cần phải chọn Quận/Huyện
+                        {formik.errors.district}
                       </span>
                     )}
                   </div>
                   <div className="w-full">
                     <select
                       className="w-full h-[4rem] border outline-none pl-3"
-                      name="village"
-                      onChange={(e) =>
-                        setAddress((prev) => ({
-                          ...prev,
-                          village: e.target.value,
-                        }))
-                      }
+                      name="ward"
+                      value={formik.values.ward}
+                      onChange={(e) => {
+                        setSelectedWard(e.target.value);
+                        formik.handleChange(e);
+                      }}
                     >
                       <option value="">--Xã/Thị trấn--</option>
-
-                      <option value="Khương Đình">Tương Mai</option>
+                      {wards?.length > 0 &&
+                        wards.map((ward) => {
+                          return (
+                            <option key={ward.villageId} value={ward.villageId}>
+                              {ward.villageName}
+                            </option>
+                          );
+                        })}
                     </select>
-                    {!address.village && (
+                    {formik.errors.ward && formik.touched.ward && (
                       <span className="text-red text-[1.3rem]">
-                        Bạn cần phải chọn Xã/Thị trấn
+                        {formik.errors.ward}
                       </span>
                     )}
                   </div>
