@@ -141,7 +141,9 @@ function Payment() {
             if (result.isConfirmed) {
               clearCart();
               dispatcher({ type: "UPDATE_QUANTITY", payload: 0 });
-              navigate("/product");
+              navigate("/product", {
+                replace: true,
+              });
             }
           });
         }
@@ -403,7 +405,9 @@ function Payment() {
                   className="min-w-[8rem] py-2 px-8 bg-red text-white rounded-lg shadow-lg font-semibold"
                   onClick={() => {
                     formik.resetForm();
-                    navigate("/cart");
+                    navigate("/cart", {
+                      replace: true,
+                    });
                   }}
                 >
                   Hủy
