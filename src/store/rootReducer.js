@@ -10,6 +10,11 @@ const rootReducer = (state, action) => {
         ...state,
         quantity: action.payload,
       };
+    case "SEARCH":
+      return {
+        ...state,
+        searchKey: action.payload,
+      };
 
     default:
       return state;
