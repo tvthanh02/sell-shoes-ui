@@ -155,7 +155,7 @@ const ProductDetail = () => {
                         <div
                           key={index}
                           className={
-                            "w-full border border-solid border-textColor"
+                            "w-full border border-solid border-textColor hover:cursor-pointer"
                           }
                           onClick={() => setActiveThumb(thumb)}
                         >
