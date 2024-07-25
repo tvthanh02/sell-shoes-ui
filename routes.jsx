@@ -1,35 +1,39 @@
+/* eslint-disable react/no-children-prop */
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { Default } from "@/layouts";
-import { Home, Product, ProductDetail, Cart } from "@/pages";
-import Payment from "@/pages/Payment";
+import { Default, Sidebar } from "@/layouts";
+import { Home, Product, ProductDetail, Cart, Payment, Search } from "@/pages";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Default chidldren={<Home />} />,
+    element: <Default children={<Home />} />,
   },
   {
     path: "/product",
-    element: <Default chidldren={<Product />} />,
+    element: <Default children={<Product />} />,
   },
   {
     path: "/detail/:id",
-    element: <Default chidldren={<ProductDetail />} />,
+    element: <Default children={<ProductDetail />} />,
   },
   {
     path: "/cart",
-    element: <Default chidldren={<Cart />} />,
+    element: <Default children={<Cart />} />,
   },
   {
     path: "/payment",
-    element: <Default chidldren={<Payment />} />,
+    element: <Default children={<Payment />} />,
+  },
+  {
+    path: "/search",
+    element: <Sidebar children={<Search />} />,
   },
   {
     path: "/services",
     element: (
       <Default
-        chidldren={
+        children={
           <p className="container text-red font-bold tex-[3rem]">
             Coming Soon!
           </p>
@@ -41,7 +45,7 @@ const router = createBrowserRouter([
     path: "/contact",
     element: (
       <Default
-        chidldren={
+        children={
           <p className="container text-red font-bold tex-[3rem]">
             Coming Soon!
           </p>

@@ -109,9 +109,6 @@ export default {
           },
         ],
       },
-      fontFamily: {
-        Sarabun: ["Sarabun", ...defaultTheme.fontFamily.sans],
-      },
       colors: {
         primary: "#fed700",
         textColor: "#5b5b5b",
