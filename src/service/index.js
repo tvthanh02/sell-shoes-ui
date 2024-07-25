@@ -17,6 +17,13 @@ export const getBestSellproducts = async (querys = {}) => {
   return response.json();
 };
 
+export const searchProducts = async (searchKey, page = 0) => {
+  const response = await fetch(
+    baseUrlApi + "products" + `?q=${searchKey}&page=${page}`
+  );
+  return response.json();
+};
+
 export const getProductByBrand = async (brand) => {
   const response = await fetch(baseUrlApi + "products" + "?brand=" + brand);
   return response.json();
