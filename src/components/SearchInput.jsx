@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { AppContext } from "@/App";
+import { useNavigate } from "react-router-dom";
 
-const Input = () => {
+const SearchInput = () => {
   const [input, setInput] = useState("");
+  const { dispatcher } = useContext(AppContext);
+  // navigate
+  const navigate = useNavigate();
 
   return (
     <div className="basis-5/12 lg:basis-2/12">
@@ -16,8 +21,15 @@ const Input = () => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              console.log(input);
+              if (input.length === 0) {
+                return;
+              }
+              dispatcher({
+                type: "SEARCH",
+                payload: encodeURIComponent(input.trim()),
+              });
               setInput("");
+              navigate("/search");
             }
           }}
         />
@@ -29,4 +41,4 @@ const Input = () => {
   );
 };
 
-export default Input;
+export default SearchInput;

@@ -1,17 +1,16 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
   faCartShopping,
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
-
-import Input from "@/components/Input";
-
+import { useNavigate, NavLink } from "react-router-dom";
+import { SearchInput } from "@/components";
 import { AppContext } from "@/App";
 
 const Header = () => {
+  const navigate = useNavigate();
   const { state } = useContext(AppContext);
 
   return (
@@ -27,7 +26,10 @@ const Header = () => {
       </div>
       <hr className="w-full h-[1px] border-t border-solid border-[#f1f1f1]" />
       <div className="container bg-white flex items-center text-sm py-3 gap-3">
-        <div className="basis-5/12 lg:basis-2/12">
+        <div
+          className="basis-5/12 lg:basis-2/12 hover:cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <p className="flex items-center gap-1 text-xl md:text-2xl lg:basis-3/12 lg:text-3xl font-bold">
             <span className="py-[2px] px-2 bg-primary rounded-full">Shoes</span>
           </p>
@@ -77,7 +79,7 @@ const Header = () => {
             liên hệ
           </NavLink>
         </nav>
-        <Input />
+        <SearchInput />
         <div className="basis-1/12 lg:basis-1/12 flex justify-end">
           <NavLink
             className={
