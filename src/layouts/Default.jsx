@@ -1,10 +1,10 @@
 import { Header, Footer, ScrollToTop } from "@/components";
-const Default = ({ chidldren }) => {
+const Default = ({ children }) => {
   return (
     <>
       <ScrollToTop />
       <Header />
-      <main className="my-10">{chidldren}</main>
+      <main className="my-10">{children}</main>
       <Footer />
     </>
   );
